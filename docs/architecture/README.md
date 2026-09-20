@@ -37,6 +37,7 @@ These documents are the working bridge between product planning and code changes
 | Feature 13 | `feature-13-favourites-and-curation.md` | Favourites, hidden-item curation, and curated-history recovery. | Saturday, 18 April 2026, 18:30 | [PR8](https://github.com/jibbajabber/watch-history/pull/8)   |
 | Feature 14 | `feature-14-testing-and-tdd-workflow.md` | Container-first automated testing workflow and TDD guidance. | Monday, 20 April 2026, 19:36   | [PR9](https://github.com/jibbajabber/watch-history/pull/9)   |
 | Feature 15 | `feature-15-security-review.md` | Security review and secret-exposure hardening across browser-visible paths, API responses, logs, and build artifacts. | Monday, 20 April 2026, 20:46 | [PR10](https://github.com/jibbajabber/watch-history/pull/10) |
+| Feature 16 | `feature-16-fixed-compose-network.md` | Stable Docker networking for Home Assistant reverse-proxy IP allowlists. | — | — |
 
 ## Notes
 

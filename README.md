@@ -85,7 +85,7 @@ Watch history aims to try to solve that, it collects your viewing data from sour
 - `scripts/source-sync-worker.ts`: Scheduled source sync worker for Docker Compose, currently handling Home Assistant and Plex.
 - `tests/`: `vitest` suites for pure server-side helpers, mocked server-side orchestration coverage such as source status assembly, importer rebuilding, and source-retention cleanup, plus secret-exposure regression checks.
 - `Dockerfile`: Canonical application container definition for local development.
-- `docker-compose.yml`: Container orchestration for the web application and PostgreSQL database.
+- `docker-compose.yml`: Container orchestration for the web application and PostgreSQL database, including the stable `web` container address used by a host-networked Home Assistant allowlist.
 - `next.config.ts`: Next.js runtime configuration.
 - `package.json`: App package manifest, scripts, and dependency declarations.
 - `tsconfig.json`: TypeScript compiler configuration.
@@ -241,6 +241,24 @@ APP_TIMEZONE=Europe/London
 ```env
 APP_INTERNAL_URL=http://web:3000
 ```
+
+## Docker Network And Host-Networked Home Assistant
+
+The application Compose network is a dedicated `172.37.0.0/24` bridge with gateway `172.37.0.1`. Its `web` service always uses `172.37.0.5`; `worker` calls `web` internally and does not contact Home Assistant directly.
+
+This stable address supports a Home Assistant deployment that uses Docker host-network mode and has an IP-restricted reverse proxy. After deploying the Compose configuration, allowlist `172.37.0.5` in that proxy. Confirm the source address from its denial/access logs before relying on the rule.
+
+The `web` container also resolves `host.docker.internal` to Docker's Linux host gateway. If Home Assistant is exposed on the host's port `8123`, its non-secret `base_url` in `configs/home-assistant.yaml` may use `http://host.docker.internal:8123`; retain a hostname-based URL instead when that is needed for your reverse proxy or TLS certificate.
+
+Apply the network change on the active Docker host with:
+
+```bash
+docker compose config
+docker compose up -d --force-recreate
+docker compose ps
+```
+
+These commands recreate the application containers so their fixed network settings take effect. Do not expose or copy any `.env` values while running them.
 
 ## Home Assistant Import
 
