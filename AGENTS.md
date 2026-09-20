@@ -227,7 +227,7 @@ Historical decisions are archived in [docs/decisions/decicions-log.md](/home/ads
 | 2026-04-20 | Feature 15 is complete with security review and secret-exposure hardening close-out.   | Browser-visible paths, API responses, logs, client bundles, and build artifacts now keep sensitive configuration server-side and surface generic public errors. |
 | 2026-04-20 | `docs/security/security.md` is the standing security-process reference.                | The repo now has a durable security playbook for secret handling, browser/API exposure review, logging hygiene, and secure development flow.                    |
 | 2026-04-20 | Production build output review found no public source maps or browser bundle leaks.    | Secret-bearing env-var names appear only in server-only chunks; the static browser bundles and emitted build artifacts do not expose the sensitive values.      |
-| 2026-09-20 | Feature 16 uses a fixed application Compose subnet and web-container address. | `web` uses `172.37.0.5` on `172.37.0.0/24` so a host-networked Home Assistant reverse proxy can allowlist the importer without granting an entire Docker subnet. |
+| 2026-09-20 | Feature 16 is complete with a fixed application Compose subnet and web-container address. | `web` uses `172.37.0.5` on `172.37.0.0/24`; after the reverse proxy allowlisted it, Home Assistant scheduled import resumed and recovered history missing since 27 August 2026. |
 
 ## Next Discovery Steps
 
@@ -244,5 +244,5 @@ Historical decisions are archived in [docs/decisions/decicions-log.md](/home/ads
   The repository now has a container-first local automated testing workflow using `vitest`, text and HTML coverage output, helper-focused and mocked orchestration tests, importer and retention cleanup coverage, extracted-helper rewiring for analytics, and documented TDD expectations, with CI deferred to a later feature.
 - Feature 15: Complete
   The security review hardened browser-visible routes, server actions, logs, client bundles, and build artifacts so sensitive configuration stays server-side and secret-bearing errors are surfaced with generic public messages.
-- Feature 16: In progress
-  The application Compose network is being made stable so the Home Assistant importer can be allowlisted by its fixed `web` container address while Home Assistant continues to use host-network mode.
+- Feature 16: Complete
+  The `web` container now has a stable `172.37.0.5` address on the application bridge, which Home Assistant's host-networked reverse proxy allowlists; the live scheduled importer recovered the missing history after deployment.

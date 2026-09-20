@@ -2,7 +2,7 @@
 
 ## Status
 
-In progress. The approach was reviewed with the user on 20 September 2026.
+Complete. The approach was reviewed, deployed, and validated with a successful Home Assistant scheduled import on 20 September 2026.
 
 ## Goal
 
@@ -41,5 +41,22 @@ On the active Docker host, after deploying the Compose update:
 1. Run `docker compose config` and confirm the default network uses `172.37.0.0/24` with gateway `172.37.0.1`, and `web` resolves to `172.37.0.5`.
 2. Run `docker compose up -d --force-recreate` to apply the network change.
 3. Confirm `docker compose ps` shows `web`, `worker`, and `db` healthy/running as applicable.
-4. Update the Home Assistant reverse-proxy allowlist with `172.37.0.10` and confirm its denial log reports that source address.
+4. Update the Home Assistant reverse-proxy allowlist with `172.37.0.5` and confirm its denial log reports that source address.
 5. Trigger a Home Assistant import and confirm it completes.
+
+## Completion Evidence
+
+- Compose rendered with the `172.37.0.0/24` bridge, gateway `172.37.0.1`, and `web` at `172.37.0.5`.
+- The active Docker host recreated the application stack and the Home Assistant reverse proxy allowlisted the fixed importer address.
+- Scheduled Home Assistant import resumed and recovered the missing history since 27 August 2026.
+
+## Deployment Finding
+
+Changing the explicit default network name left existing containers referring to Docker Compose's former generated `watch-history_default` network. The safe one-time migration was:
+
+```bash
+docker compose down --remove-orphans
+docker compose up -d
+```
+
+Do not add `-v`: the Postgres volume must be retained. Future explicit-network migrations should use the same clean container/network recreation before starting the updated stack.

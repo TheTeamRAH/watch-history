@@ -145,6 +145,7 @@ Completed:
 - Feature 13: favourites tab with persistent favourite and hide curation, hidden-item exclusion from default timeline and analytics views, and recovery of hidden items from `/favourites`
 - Feature 14: container-first local automated testing with `vitest`, coverage output, helper-focused tests, mocked source, importer, retention, and analytics orchestration coverage, and documented TDD guidance
 - Feature 15: security review and secret-exposure hardening across browser-visible paths, API responses, logs, and build artifacts
+- Feature 16: fixed Compose networking for a host-networked Home Assistant deployment, with the `web` importer allowlisted at `172.37.0.5` and scheduled history import recovered
 ## Security Process
 
 - `docs/security/security.md` is the standing process guide for keeping user-provided secrets server-side and out of browser-visible, logged, or build-generated surfaces.
@@ -259,6 +260,8 @@ docker compose ps
 ```
 
 These commands recreate the application containers so their fixed network settings take effect. Do not expose or copy any `.env` values while running them.
+
+When introducing this explicit network name to an existing stack, use `docker compose down --remove-orphans` before `docker compose up -d` if Docker reports that a stale container still references the prior generated network. Do not add `-v`, so the Postgres volume is retained.
 
 ## Home Assistant Import
 
